@@ -15,4 +15,24 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/ic_file_upload_black"
         android:onClick="browse"/>
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+    <TextView
+        android:id="@+id/textViewStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="160dp"
+        android:text="File Not Uploaded"
+        android:textColor="#e54bb3ef"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
 </RelativeLayout>
