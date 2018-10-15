@@ -23,8 +23,10 @@
         <activity
             android:name=".Home"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme"></activity>
-        <activity android:name=".UploadFileActivity"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".UploadFileActivity" />
+        <activity android:name=".TestLoadData" />
+        <activity android:name=".CariDataPart"></activity>
     </application>
 
 </manifest>
