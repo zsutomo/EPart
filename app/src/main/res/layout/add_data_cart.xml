@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardView_estimasiPart"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5.0dip"
+    android:layout_marginBottom="10.0dip"
+    android:background="@drawable/rect_gradient"
+    android:padding="10.0dip">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rect_gradient"
+        android:orientation="vertical"
+        android:padding="15.0dip">
+
+        <TextView
+            android:id="@+id/nomorPart"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nomor Part"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/namaPart"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nama Part"
+            android:textSize="12.0sp" />
+
+        <TextView
+            android:id="@+id/hargaPart"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Rp."
+            android:textSize="12.0sp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1.0dip"
+            android:layout_marginTop="10.0dip"
+            android:background="#d8000000" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5.0dip"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_ngurangin"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10.0dip"
+                android:src="@drawable/ic_minus_circle" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_jmlah_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10.0dip"
+                    android:text="0"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <ImageButton
+                android:id="@+id/btn_nambah"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10.0dip"
+                android:src="@drawable/ic_add_circle" />
+
+            <TextView
+                android:id="@+id/tv_jumlah_hargaItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50.0dip"
+                android:text="Rp."
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

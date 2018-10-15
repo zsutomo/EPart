@@ -9,6 +9,7 @@
             android:id="@+id/nav_uploadFile"
             android:icon="@drawable/ic_file_upload_black"
             android:title="Upload File" />
+
         <item
             android:id="@+id/nav_datapart"
             android:icon="@drawable/ic_format_list"

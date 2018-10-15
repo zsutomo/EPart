@@ -1,16 +1,19 @@
 package com.astra.acan.epart;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -28,6 +31,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
+import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -62,14 +66,13 @@ public class UploadFileActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView tvStatus;
     private Button btn_upload;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_file);
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        tvStatus = (TextView) findViewById(R.id.textViewStatus);
         btn_upload = (Button) findViewById(R.id.btn_upload);
 
 
@@ -87,9 +90,9 @@ public class UploadFileActivity extends AppCompatActivity {
 
 //        userReference.child(userId).removeValue();
 
-//        checkPermissionsAndOpenFilePicker();
+        checkPermissionsAndOpenFilePicker();
 
-        chooseFileToUpload();
+//        chooseFileToUpload();
     }
 
     private void chooseFileToUpload() {
@@ -131,25 +134,29 @@ public class UploadFileActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_EXCEL_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            pathUri = data.getData();
-            if (pathUri != null) {
-                System.out.println("String Path : " + pathUri);
-                UploadFileToServer(pathUri);
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//
-//
-////                        ArrayList<ArrayList> data_get = load_excel_format_xls(path);
-////                        getDataExcel(data_get);
-////                        System.out.println("data size : " + data_get.size());
-//                        Log.d("Path: ", String.valueOf(pathUri));
-//                    }
-//                }).start();
-            } else {
-                Toast.makeText(this, "Tidak Ada data yang terpilih", Toast.LENGTH_SHORT).show();
+        if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
+            final String path = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+            System.out.println("String Path : " + path);
+
+            if (path != null) {
+                System.out.println("String Path : " + path);
+                progressDialog = new ProgressDialog(this);
+                progressDialog.setTitle("Load Data");
+                progressDialog.setMessage("Mohon Tunggu...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+               new Handler().postDelayed(new Runnable() {
+                   @Override
+                   public void run() {
+                       ArrayList<ArrayList> data_get = load_excel_format_xls(path);
+                       getDataExcel(data_get);
+                       System.out.println("data size : " + data_get.size());
+                       Log.d("Path: " ,path);
+                   }
+               },20000);
+                Toast.makeText(UploadFileActivity.this, "Picked file: " + path, Toast.LENGTH_LONG).show();
+//                progressDialog.dismiss();
             }
         }
     }
@@ -183,7 +190,6 @@ public class UploadFileActivity extends AppCompatActivity {
                 alertDialogBuilder.show();
 
                 progressBar.setVisibility(View.GONE);
-                tvStatus.setVisibility(View.GONE);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -252,8 +258,7 @@ public class UploadFileActivity extends AppCompatActivity {
             final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
             final String key = databaseReference.push().getKey();
 
-
-            if (databaseReference.child(userId).child("FileUpload").getKey().isEmpty()){
+            if (databaseReference.child(userId).child("DataPart").getKey().isEmpty()){
 
                 databaseReference.child(userId).child("FileUpload").child(key).child("id").setValue(key);
                 databaseReference.child(userId).child("FileUpload").child(key).child("NomorPart").setValue(nomorPart);
@@ -261,17 +266,15 @@ public class UploadFileActivity extends AppCompatActivity {
                 databaseReference.child(userId).child("FileUpload").child(key).child("HargaPart").setValue(hargaPart);
 
             } else {
-
                 databaseReference.child(userId).child("FileUpload").child(key).child("id").setValue(key);
                 databaseReference.child(userId).child("FileUpload").child(key).child("NomorPart").setValue(nomorPart);
                 databaseReference.child(userId).child("FileUpload").child(key).child("NamaPart").setValue(namaPart);
                 databaseReference.child(userId).child("FileUpload").child(key).child("HargaPart").setValue(hargaPart);
             }
 
-
-
-
         }
+
+        progressDialog.dismiss();
     }
 
     private void showError() {
