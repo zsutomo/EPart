@@ -2,7 +2,7 @@
 <android.support.v7.widget.Toolbar
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="#6988f7"
     android:elevation="0dp"
     android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cari Data Part"
+        android:text="Cetak Estimasi"
         android:textSize="20sp"
         android:textColor="#fff"
         android:layout_gravity="center_horizontal"

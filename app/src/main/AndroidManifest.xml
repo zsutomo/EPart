@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.astra.acan.epart">
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -26,7 +28,11 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".UploadFileActivity" />
         <activity android:name=".TestLoadData" />
-        <activity android:name=".CariDataPart"></activity>
+        <activity android:name=".CariDataPart" />
+        <activity android:name=".DetailEstimasi" />
+        <activity android:name=".DataEstimasi" />
+        <activity android:name=".CetakData" />
+        <activity android:name=".ListDevice"></activity>
     </application>
 
 </manifest>

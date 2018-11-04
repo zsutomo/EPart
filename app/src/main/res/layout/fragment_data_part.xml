@@ -58,7 +58,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="30dp"
-        app:srcCompat="@drawable/ic_shopping_cart_black"
+        app:srcCompat="@drawable/ic_add_shopping_cart_black"
         tools:ignore="VectorDrawableCompat" />
 
     <TextView
