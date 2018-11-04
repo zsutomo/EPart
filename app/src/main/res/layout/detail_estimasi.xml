@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    android:layout_margin="15dp">
+
+    <LinearLayout
+        android:id="@+id/rl_input_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_edittext">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="DETAIL ESTIMASI"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:background="#000"/>
+
+        <TextView
+            android:id="@+id/tv_list"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Part List"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ListView
+            android:padding="5dp"
+            android:background="@drawable/bg_edittext"
+            android:id="@+id/listViewItem"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="2dp">
+        </ListView>
+
+
+        <TextView
+            android:id="@+id/tv_totalEstimasi"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total :"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_nama_sa"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_totalEstimasi"
+            android:layout_marginTop="5dp"
+            android:textSize="15sp"
+            android:text="namaSA"/>
+
+        <TextView
+            android:id="@+id/tv_nama_teknisi"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_totalEstimasi"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"
+            android:text="Teknisi"/>
+
+        <TextView
+            android:id="@+id/tv_nama_foreman"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_nama_teknisi"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"
+            android:text="Foreman"/>
+
+        <TextView
+            android:id="@+id/tv_nomor_polisi"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/et_nama_foreman"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"
+            android:text="Nomor Polisi"/>
+
+        <TextView
+            android:id="@+id/tv_type_kendaraan"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_nomor_polisi"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"
+            android:text="Nomor Polisi"/>
+
+        <TextView
+            android:id="@+id/tv_tanggal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_nomor_polisi"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"
+            android:text="Tanggal"/>
+
+        <TextView
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/tv_userId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_nomor_polisi"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"
+            android:text="User ID"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

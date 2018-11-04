@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    tools:context=".CetakData"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar_cetak"
+        layout="@layout/toolbar_caridata"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg">
+
+        <Button
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal"
+            android:id="@+id/scan_btn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/ic_search_black"
+            android:background="@drawable/circle_btn"
+            android:text="SCAN Printer"
+            android:textColor="#FFF"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:id="@+id/print_btn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/circle_btn"
+            android:drawableTop="@drawable/ic_print_black"
+            android:layout_marginTop="35dp"
+            android:text="PRINT"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:textColor="#FFF"/>
+
+        <Button
+            android:id="@+id/shutdown_btn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/circle_btn"
+            android:drawableTop="@drawable/ic_power_settings_black"
+            android:layout_marginTop="35dp"
+            android:text="off"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:textColor="#FFF"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

@@ -3,10 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="10dp"
-    android:background="@drawable/rect_gradient">
+    android:layout_marginTop="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,22 +17,29 @@
             android:id="@+id/textViewNomorPart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:textAppearanceLarge"
-            tools:text="TextView" />
+            android:textStyle="bold"
+            android:textAppearance="?android:textAppearanceMedium"
+            tools:text="Nomor Part" />
 
         <TextView
             android:id="@+id/textViewNamaPart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:textAppearanceMedium"
-            tools:text="TextView" />
+            android:textAppearance="?android:textAppearanceSmall"
+            tools:text="Nama Part" />
 
         <TextView
             android:id="@+id/textViewHargaPart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:textAppearanceMedium"
-            tools:text="TextView" />
+            android:textAppearance="?android:textAppearanceSmall"
+            tools:text="Harga Part" />
+        <TextView
+            android:id="@+id/textViewJumlahItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceSmall"
+            tools:text="Jumlah Item" />
 
     </LinearLayout>
 </RelativeLayout>

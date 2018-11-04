@@ -36,7 +36,7 @@ public class Home extends AppCompatActivity
         fragmenTransaction = getSupportFragmentManager().beginTransaction();
         fragmenTransaction.add(R.id.frame_layout, new DataEstimasiFragment());
         fragmenTransaction.commit();
-        getSupportActionBar().setTitle("Home");
+        getSupportActionBar().setTitle("DataEstimasi");
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -46,7 +46,7 @@ public class Home extends AppCompatActivity
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+            drawer.closeDrawer(GravityCompat.END);
         } else {
             super.onBackPressed();
         }
