@@ -31,8 +31,7 @@
         <activity android:name=".CariDataPart" />
         <activity android:name=".DetailEstimasi" />
         <activity android:name=".DataEstimasi" />
-        <activity android:name=".CetakData" />
-        <activity android:name=".ListDevice"></activity>
+        <activity android:name=".ListDevice" />
     </application>
 
 </manifest>

@@ -42,7 +42,6 @@ public class CetakData extends AppCompatActivity implements Runnable {
     private Button btn_print;
     private Button btn_off;
     ArrayList<ModelItem> itemArrayList = new ArrayList<>();
-    private P25Connector mConnector;
     private String tanggal;
     private String nama_sa;
     private String nama_teknisi;
@@ -106,6 +105,8 @@ public class CetakData extends AppCompatActivity implements Runnable {
         getDateTime();
 
         Thread t = new Thread() {
+            private String total_hargaItem;
+
             public void run() {
                 try {
 
@@ -120,19 +121,27 @@ public class CetakData extends AppCompatActivity implements Runnable {
                     BILL = BILL + "--------------------------------\n";
 
 
-                    BILL = BILL + String.format("%1$-10s %2$10s %3$10s", "NoPart", "Qty", "Ttl");
+                    BILL = BILL + String.format("%1$-6s %2$3s %3$8s %4$8s", "Item", "Qty", "Hrg", "Ttl");
                     BILL = BILL + "\n";
                     BILL = BILL + "\n";
 
                     for (int i = 0; i<itemArrayList.size(); i++) {
                         String nomorPart = itemArrayList.get(i).getNomorPart();
+                        String namaPart = itemArrayList.get(i).getNamaPart();
+                        String hargaPart = itemArrayList.get(i).getHargaPart();
                         String JumlahItem = itemArrayList.get(i).getJmlahItem();
                         String hargaItem = itemArrayList.get(i).getTotalHargaItem();
 
-                        BILL = BILL + String.format("%1$-10s %2$10s %3$10s", nomorPart, JumlahItem, hargaItem + "\n");
+                        BILL = BILL + String.format("%1$-6s %2$2s %3$8s %4$8s", namaPart, JumlahItem, hargaPart, hargaItem + "\n");
                     }
+
                     BILL = BILL + "\n--------------------------------";
-                    BILL = BILL + "\n\n";
+
+                    BILL = BILL + "Total : "+total_estimasi + "\n";
+
+                    BILL = BILL + "--------------------------------";
+
+                    BILL = BILL + "\n";
                     BILL = BILL + nama_sa + "\n";
                     BILL = BILL + nama_foreman + "\n";
                     BILL = BILL + nama_teknisi + "\n";
@@ -140,14 +149,13 @@ public class CetakData extends AppCompatActivity implements Runnable {
                     BILL = BILL + type_kendaraan + "\n";
                     BILL = BILL + admin + "\n";
 
-                    BILL = BILL + "\n--------------------------------";
+                    BILL = BILL + "--------------------------------";
 
-                    BILL = BILL + "Total : "+total_estimasi + "\n";
+                    BILL = BILL + "Tanggal : " + date + "\n";
 
-                    BILL = BILL + "\n--------------------------------";
-
-
-
+                    BILL = BILL + "TERIMAKASIH ATAS KUNJUNGAN ANDA \n";
+                    BILL = BILL + "-------AUTO 2000 Palembang------\n";
+                    BILL = BILL + "\n";
                     os.write(BILL.getBytes());
                     //This is printer specific code you can comment ==== > Start
 
