@@ -15,14 +15,18 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,15 +91,11 @@ public class DataEstimasiFragment extends Fragment{
     private ListAdapter lisAdapter;
     private TextView tv_total;
     protected static final String TAG = "TAG";
-    private static final int REQUEST_CONNECT_DEVICE = 1;
-    private static final int REQUEST_ENABLE_BT = 2;
-    Button mScan, mPrint, mDisc;
-    BluetoothAdapter mBluetoothAdapter;
-    private UUID applicationUUID = UUID
-            .fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private ProgressDialog mBluetoothConnectProgressDialog;
-    private BluetoothSocket mBluetoothSocket;
-    BluetoothDevice mBluetoothDevice;
+    private String namaPartmant;
+    private String st_stok;
+    private TextView tv_Partman;
+    private EditText editTextCari;
+    private String inputcari;
 
 
     public DataEstimasiFragment() {
@@ -109,14 +109,15 @@ public class DataEstimasiFragment extends Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_data_estimasi, container, false);
         mRecyclerView = view.findViewById(R.id.recycler_dataestimasi);
-
+        editTextCari = (EditText) view.findViewById(R.id.et_cari_estimasi);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         userId = firebaseUser.getUid();
         userEmail = firebaseUser.getEmail();
 
-        listDataEstimasi();
+//        listDataEstimasi();
+        searchingData();
 
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager myLinearManager = new LinearLayoutManager(getActivity());
@@ -129,64 +130,105 @@ public class DataEstimasiFragment extends Fragment{
         return view;
     }
 
-    private void listDataEstimasi() {
+    private void searchingData() {
+        editTextCari.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                    if (editTextCari != null) {
+                        inputcari = editTextCari.getText().toString();
+                        CariDataEstimasi(inputcari);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void CariDataEstimasi(final String inputcari) {
+
         arrayList = new ArrayList<>();
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setTitle("Load Data");
-        progressDialog.setMessage("Mohon Tunggu...");
+        progressDialog.setTitle("Mencari Data..");
+        progressDialog.setMessage("Mohon Tunggu...!");
         progressDialog.setCancelable(false);
         progressDialog.show();
 
         try {
 
             databaseReference = FirebaseDatabase.getInstance().getReference();
+            firebaseAuth = FirebaseAuth.getInstance();
+            firebaseUser = firebaseAuth.getCurrentUser();
+            userId = firebaseUser.getUid();
             databaseReference.child(userId).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                     for (DataSnapshot snapshotCart : dataSnapshot.getChildren()) {
-
                         if (snapshotCart.getKey().equals("DataEstimasi")) {
-
                             System.out.println("data snapshot1 : " + snapshotCart);
-
                             for (DataSnapshot snapshotEstimasiItem : snapshotCart.getChildren()) {
                                 System.out.println("data snapshot2 : " + snapshotEstimasiItem);
                                 String keyEstimasi = snapshotEstimasiItem.getKey();
                                 System.out.println("data key : " + keyEstimasi);
 
-                                for (DataSnapshot snapshotEstimasiItem1 : snapshotEstimasiItem.getChildren()){
-                                    System.out.println("data snapshot item1 : " + snapshotEstimasiItem1);
+                                if (inputcari.equals(snapshotEstimasiItem.getKey())){
 
-                                    String id = snapshotEstimasiItem1.getKey();
-                                    nomorPart_cart = String.valueOf(snapshotEstimasiItem1.child("nomorPart").getValue());
-                                    namaPart_cart = String.valueOf(snapshotEstimasiItem1.child("namaPart").getValue());
-                                    hargaPart_cart = String.valueOf(snapshotEstimasiItem1.child("hargaPart").getValue());
-                                    jumlahItem = String.valueOf(snapshotEstimasiItem1.child("jumlahItem").getValue());
-                                    jumlahHargaItem = String.valueOf(snapshotEstimasiItem1.child("jumlahHargaItem").getValue());
-                                    nomorPolisi = String.valueOf(snapshotEstimasiItem1.child("nomorPolisi").getValue());
-                                    typeKendaraan = String.valueOf(snapshotEstimasiItem1.child("typeKendaraan").getValue());
-                                    namaSa = String.valueOf(snapshotEstimasiItem1.child("namaSA").getValue());
-                                    namaTeknisi = String.valueOf(snapshotEstimasiItem1.child("namaTeknisi").getValue());
-                                    namaForeman = String.valueOf(snapshotEstimasiItem1.child("namaForeman").getValue());
-                                    userEmail = String.valueOf(snapshotEstimasiItem1.child("userId").getValue());
-                                    total_Estimasi = String.valueOf(snapshotEstimasiItem1.child("total_HargaEstimasi").getValue());
-                                    tanggal = String.valueOf(snapshotEstimasiItem1.child("tanggal").getValue());
+                                    for (DataSnapshot snapshotEstimasiItem1 : snapshotEstimasiItem.getChildren()){
+
+                                        System.out.println("data snapshot item1 : " + snapshotEstimasiItem1);
+
+                                        String id = snapshotEstimasiItem1.getKey();
+                                        nomorPart_cart = String.valueOf(snapshotEstimasiItem1.child("nomorPart").getValue());
+                                        namaPart_cart = String.valueOf(snapshotEstimasiItem1.child("namaPart").getValue());
+                                        hargaPart_cart = String.valueOf(snapshotEstimasiItem1.child("hargaPart").getValue());
+                                        jumlahItem = String.valueOf(snapshotEstimasiItem1.child("jumlahItem").getValue());
+                                        jumlahHargaItem = String.valueOf(snapshotEstimasiItem1.child("jumlahHargaItem").getValue());
+                                        nomorPolisi = String.valueOf(snapshotEstimasiItem1.child("nomorPolisi").getValue());
+                                        typeKendaraan = String.valueOf(snapshotEstimasiItem1.child("typeKendaraan").getValue());
+                                        namaSa = String.valueOf(snapshotEstimasiItem1.child("namaSA").getValue());
+                                        namaTeknisi = String.valueOf(snapshotEstimasiItem1.child("namaTeknisi").getValue());
+                                        namaForeman = String.valueOf(snapshotEstimasiItem1.child("namaForeman").getValue());
+                                        userEmail = String.valueOf(snapshotEstimasiItem1.child("userId").getValue());
+                                        total_Estimasi = String.valueOf(snapshotEstimasiItem1.child("total_HargaEstimasi").getValue());
+                                        tanggal = String.valueOf(snapshotEstimasiItem1.child("tanggal").getValue());
+                                        namaPartmant = String.valueOf(snapshotEstimasiItem1.child("namaPartman").getValue());
+
+                                        ModelItem dataEstimasi = new ModelItem();
+                                        dataEstimasi.setNamaSa(namaSa);
+                                        dataEstimasi.setTanggal(tanggal);
+                                        dataEstimasi.setUserEmail(userEmail);
+                                        dataEstimasi.setNamaTeknisi(namaTeknisi);
+                                        dataEstimasi.setNamaForeMan(namaForeman);
+                                        dataEstimasi.setNamaPartman(namaPartmant);
+                                        dataEstimasi.setNomorPolisi(nomorPolisi);
+                                        dataEstimasi.setNomorPart(nomorPart_cart);
+                                        dataEstimasi.setNamaPart(namaPart_cart);
+                                        dataEstimasi.setTotalHargaEstimasi(total_Estimasi);
+                                        dataEstimasi.setId(keyEstimasi);
+                                        arrayList.add(dataEstimasi);
+                                        System.out.println("data : " + jumlahItem);
+                                        progressDialog.dismiss();
+                                    }
+
+                                } else if (arrayList.size()==0){
+                                    progressDialog.dismiss();
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                    builder.setTitle("Data Kosong");
+                                    builder.setCancelable(true);
+                                    builder.setMessage("Mohon Maaf Data Yang Anda Cari Tidak ditemukan!");
+                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }).show();
+
+
                                 }
-
-                                ModelItem dataEstimasi = new ModelItem();
-                                dataEstimasi.setNamaSa(namaSa);
-                                dataEstimasi.setTanggal(tanggal);
-                                dataEstimasi.setUserEmail(userEmail);
-                                dataEstimasi.setNamaTeknisi(namaTeknisi);
-                                dataEstimasi.setNamaForeMan(namaForeman);
-                                dataEstimasi.setTotalHargaEstimasi(total_Estimasi);
-                                dataEstimasi.setId(keyEstimasi);
-                                arrayList.add(dataEstimasi);
-                                System.out.println("data : " + jumlahItem);
-                                progressDialog.dismiss();
                             }
-                        } else {
+                        } else if (arrayList.size()==0){
                             progressDialog.dismiss();
                         }
                     }
@@ -202,11 +244,95 @@ public class DataEstimasiFragment extends Fragment{
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
+
+//    private void listDataEstimasi() {
+//        arrayList = new ArrayList<>();
+//        progressDialog = new ProgressDialog(getActivity());
+//        progressDialog.setTitle("Load Data");
+//        progressDialog.setMessage("Mohon Tunggu...");
+//        progressDialog.setCancelable(false);
+//        progressDialog.show();
+//
+//        try {
+//
+//            databaseReference = FirebaseDatabase.getInstance().getReference();
+//            firebaseAuth = FirebaseAuth.getInstance();
+//            firebaseUser = firebaseAuth.getCurrentUser();
+//            userId = firebaseUser.getUid();
+//            databaseReference.child(userId).addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                    for (DataSnapshot snapshotCart : dataSnapshot.getChildren()) {
+//
+//                        if (snapshotCart.getKey().equals("DataEstimasi")) {
+//
+//                            System.out.println("data snapshot1 : " + snapshotCart);
+//
+//                            for (DataSnapshot snapshotEstimasiItem : snapshotCart.getChildren()) {
+//                                System.out.println("data snapshot2 : " + snapshotEstimasiItem);
+//                                String keyEstimasi = snapshotEstimasiItem.getKey();
+//                                System.out.println("data key : " + keyEstimasi);
+//
+//                                for (DataSnapshot snapshotEstimasiItem1 : snapshotEstimasiItem.getChildren()){
+//                                    System.out.println("data snapshot item1 : " + snapshotEstimasiItem1);
+//
+//                                    String id = snapshotEstimasiItem1.getKey();
+//                                    nomorPart_cart = String.valueOf(snapshotEstimasiItem1.child("nomorPart").getValue());
+//                                    namaPart_cart = String.valueOf(snapshotEstimasiItem1.child("namaPart").getValue());
+//                                    hargaPart_cart = String.valueOf(snapshotEstimasiItem1.child("hargaPart").getValue());
+//                                    jumlahItem = String.valueOf(snapshotEstimasiItem1.child("jumlahItem").getValue());
+//                                    jumlahHargaItem = String.valueOf(snapshotEstimasiItem1.child("jumlahHargaItem").getValue());
+//                                    nomorPolisi = String.valueOf(snapshotEstimasiItem1.child("nomorPolisi").getValue());
+//                                    typeKendaraan = String.valueOf(snapshotEstimasiItem1.child("typeKendaraan").getValue());
+//                                    namaSa = String.valueOf(snapshotEstimasiItem1.child("namaSA").getValue());
+//                                    namaTeknisi = String.valueOf(snapshotEstimasiItem1.child("namaTeknisi").getValue());
+//                                    namaForeman = String.valueOf(snapshotEstimasiItem1.child("namaForeman").getValue());
+//                                    userEmail = String.valueOf(snapshotEstimasiItem1.child("userId").getValue());
+//                                    total_Estimasi = String.valueOf(snapshotEstimasiItem1.child("total_HargaEstimasi").getValue());
+//                                    tanggal = String.valueOf(snapshotEstimasiItem1.child("tanggal").getValue());
+//                                    namaPartmant = String.valueOf(snapshotEstimasiItem1.child("namaPartman").getValue());
+//
+//
+//                                }
+//
+//                                ModelItem dataEstimasi = new ModelItem();
+//                                dataEstimasi.setNamaSa(namaSa);
+//                                dataEstimasi.setTanggal(tanggal);
+//                                dataEstimasi.setUserEmail(userEmail);
+//                                dataEstimasi.setNamaTeknisi(namaTeknisi);
+//                                dataEstimasi.setNamaForeMan(namaForeman);
+//                                dataEstimasi.setNamaPartman(namaPartmant);
+//                                dataEstimasi.setTotalHargaEstimasi(total_Estimasi);
+//                                dataEstimasi.setId(keyEstimasi);
+//                                arrayList.add(dataEstimasi);
+//                                System.out.println("data : " + jumlahItem);
+//                                progressDialog.dismiss();
+//                            }
+//                        } else if (arrayList.size()==0){
+//                            progressDialog.dismiss();
+//                        }
+//                    }
+//                    mRecyclerView.setAdapter(new DataEstimasiAdapter(arrayList));
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            });
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private class DataEstimasiAdapter extends RecyclerView.Adapter<EstimasiViewHolder> {
 
         ArrayList<ModelItem> listEstimasi;
+        String keyEstimasi;
 
         public DataEstimasiAdapter(ArrayList<ModelItem> arrayList) {
             listEstimasi = arrayList;
@@ -225,66 +351,93 @@ public class DataEstimasiFragment extends Fragment{
         public void onBindViewHolder(@NonNull EstimasiViewHolder estimasiViewHolder, final int position) {
             estimasiViewHolder.tv_UserEmail.setText("User Id : " + listEstimasi.get(position).getUserEmail());
             estimasiViewHolder.tv_tanggalEstimasi.setText("Waktu : " + listEstimasi.get(position).getTanggal());
-            estimasiViewHolder.tv_namaSA.setText(listEstimasi.get(position).getNamaSa());
+            estimasiViewHolder.tv_namaSA.setText("SA : " +listEstimasi.get(position).getNamaSa());
             estimasiViewHolder.tv_total_hargaEstimasi.setText(listEstimasi.get(position).getTotalHargaEstimasi());
             estimasiViewHolder.tv_lihatDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                        listItem = new ArrayList<>();
+                    listItem = new ArrayList<>();
 
-                        final String keyEstimasi = listEstimasi.get(position).getId();
-                        String namaSA = listEstimasi.get(position).getNamaSa();
-                        String totalEstimasi = listEstimasi.get(position).getTotalHargaEstimasi();
-                        System.out.println("test key estimasi : " + keyEstimasi);
+                    keyEstimasi = listEstimasi.get(position).getId();
+                    String namaSA = listEstimasi.get(position).getNamaSa();
+                    String totalEstimasi = listEstimasi.get(position).getTotalHargaEstimasi();
+                    System.out.println("test key estimasi : " + keyEstimasi);
 
-                        databaseReference = FirebaseDatabase.getInstance().getReference();
-                        databaseReference.child(userId).child("DataEstimasi").addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for (DataSnapshot dataSnapshotEstimasi : dataSnapshot.getChildren()) {
-                                    if (dataSnapshotEstimasi.getKey().equals(keyEstimasi)) {
-                                        for (DataSnapshot dataSnapshotListItem : dataSnapshotEstimasi.getChildren()) {
+                    databaseReference = FirebaseDatabase.getInstance().getReference();
+                    databaseReference.child(userId).child("DataEstimasi").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot dataSnapshotEstimasi : dataSnapshot.getChildren()) {
+                                if (dataSnapshotEstimasi.getKey().equals(keyEstimasi)) {
+                                    for (DataSnapshot dataSnapshotListItem : dataSnapshotEstimasi.getChildren()) {
 //                                            System.out.println("data snapshot isi estimasi : " + dataSnapshotListItem);
 
-                                            String id = dataSnapshotListItem.getKey();
-                                            nomorPart_cart = String.valueOf(dataSnapshotListItem.child("nomorPart").getValue());
-                                            namaPart_cart = String.valueOf(dataSnapshotListItem.child("namaPart").getValue());
-                                            hargaPart_cart = String.valueOf(dataSnapshotListItem.child("hargaPart").getValue());
-                                            jumlahItem = String.valueOf(dataSnapshotListItem.child("jumlahItem").getValue());
-                                            jumlahHargaItem = String.valueOf(dataSnapshotListItem.child("jumlahHargaItem").getValue());
-                                            nomorPolisi = String.valueOf(dataSnapshotListItem.child("nomorPolisi").getValue());
-                                            typeKendaraan = String.valueOf(dataSnapshotListItem.child("typeKendaraan").getValue());
-                                            namaSa = String.valueOf(dataSnapshotListItem.child("namaSA").getValue());
-                                            namaTeknisi = String.valueOf(dataSnapshotListItem.child("namaTeknisi").getValue());
-                                            namaForeman = String.valueOf(dataSnapshotListItem.child("namaForeman").getValue());
-                                            userEmail = String.valueOf(dataSnapshotListItem.child("userId").getValue());
-                                            total_Estimasi = String.valueOf(dataSnapshotListItem.child("total_HargaEstimasi").getValue());
-                                            tanggal = String.valueOf(dataSnapshotListItem.child("tanggal").getValue());
+                                        String id = dataSnapshotListItem.getKey();
+                                        nomorPart_cart = String.valueOf(dataSnapshotListItem.child("nomorPart").getValue());
+                                        namaPart_cart = String.valueOf(dataSnapshotListItem.child("namaPart").getValue());
+                                        hargaPart_cart = String.valueOf(dataSnapshotListItem.child("hargaPart").getValue());
+                                        jumlahItem = String.valueOf(dataSnapshotListItem.child("jumlahItem").getValue());
+                                        jumlahHargaItem = String.valueOf(dataSnapshotListItem.child("jumlahHargaItem").getValue());
+                                        nomorPolisi = String.valueOf(dataSnapshotListItem.child("nomorPolisi").getValue());
+                                        typeKendaraan = String.valueOf(dataSnapshotListItem.child("typeKendaraan").getValue());
+                                        namaSa = String.valueOf(dataSnapshotListItem.child("namaSA").getValue());
+                                        namaTeknisi = String.valueOf(dataSnapshotListItem.child("namaTeknisi").getValue());
+                                        namaForeman = String.valueOf(dataSnapshotListItem.child("namaForeman").getValue());
+                                        userEmail = String.valueOf(dataSnapshotListItem.child("userId").getValue());
+                                        total_Estimasi = String.valueOf(dataSnapshotListItem.child("total_HargaEstimasi").getValue());
+                                        tanggal = String.valueOf(dataSnapshotListItem.child("tanggal").getValue());
+                                        namaPartmant = String.valueOf(dataSnapshotListItem.child("namaPartman").getValue());
+                                        st_stok = String.valueOf(dataSnapshotListItem.child("Status_Stok").getValue());
 
-                                            ModelItem dataitem = new ModelItem();
-                                            dataitem.setNomorPart(nomorPart_cart);
-                                            dataitem.setNamaPart(namaPart_cart);
-                                            dataitem.setHargaPart(hargaPart_cart);
-                                            dataitem.setJmlahItem(jumlahItem);
-                                            dataitem.setTotalHargaItem(jumlahHargaItem);
-                                            listItem.add(dataitem);
-                                        }
+                                        ModelItem dataitem = new ModelItem();
+                                        dataitem.setNomorPart(nomorPart_cart);
+                                        dataitem.setNamaPart(namaPart_cart);
+                                        dataitem.setHargaPart(hargaPart_cart);
+                                        dataitem.setStatusStok(st_stok);
+                                        dataitem.setJmlahItem(jumlahItem);
+                                        dataitem.setTotalHargaItem(jumlahHargaItem);
+                                        listItem.add(dataitem);
                                     }
                                 }
                             }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Toast.makeText(getActivity(), "ERor" + databaseError, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                        if (listItem != null) {
-                            lihatDetail(totalEstimasi,namaSA, listItem);
-                        } else {
-                            Toast.makeText(getActivity(), "Data Kosong", Toast.LENGTH_SHORT).show();
                         }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(getActivity(), "ERor" + databaseError, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    if (listItem != null) {
+                        lihatDetail(totalEstimasi,namaSA, listItem);
+                    } else {
+                        Toast.makeText(getActivity(), "Data Kosong", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            estimasiViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getContext(), "Test card" + keyEstimasi, Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder aBuilder = new AlertDialog.Builder(getContext());
+                    aBuilder.setTitle("Info Data");
+                    aBuilder.setCancelable(true);
+                    aBuilder.setMessage("Data Estimasi : " + keyEstimasi);
+                    aBuilder.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(getContext(), keyEstimasi+" Belum Bisa di Edit", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    aBuilder.setNegativeButton("Hapus", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(getContext(), keyEstimasi+" Belum Bisa di Hapus", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    aBuilder.show();
                 }
             });
 
@@ -307,6 +460,7 @@ public class DataEstimasiFragment extends Fragment{
                 String hargaPart_cart = listItem.get(i).getHargaPart();
                 jumlahItem_part = listItem.get(i).getJmlahItem();
                 String jumlahHargaItem = String.valueOf(listItem.get(i).getTotalHargaItem());
+                String st_stok = listItem.get(i).getStatusStok();
 
                 System.out.println("test list Item Nomor : "+ nomorPart_cart);
                 System.out.println("test list Item nama : "+ namaPart_cart);
@@ -320,6 +474,7 @@ public class DataEstimasiFragment extends Fragment{
                 item.setHargaPart(hargaPart_cart);
                 item.setJmlahItem(jumlahItem_part);
                 item.setTotalHargaItem(jumlahHargaItem);
+                item.setStatusStok(st_stok);
                 listItemPart.add(item);
 
                 System.out.println("test data item : " + item.getJmlahItem());
@@ -342,12 +497,14 @@ public class DataEstimasiFragment extends Fragment{
             tv_tanggal = (TextView) view.findViewById(R.id.tv_tanggal);
             tv_userId = (TextView) view.findViewById(R.id.tv_userId);
             tv_total = (TextView) view.findViewById(R.id.tv_totalEstimasi);
+            tv_Partman = (TextView) view.findViewById(R.id.tv_nama_partman);
 
-            tv_namaSa.setText(testsa);
-            tv_teknisi.setText(namaTeknisi);
-            tv_foreman.setText(namaForeman);
-            tv_nomorpolisi.setText(nomorPolisi);
-            tv_typekendaraan.setText(typeKendaraan);
+            tv_namaSa.setText("SA : " +testsa);
+            tv_teknisi.setText("Teknisi : " + namaTeknisi);
+            tv_foreman.setText("Foreman : " +namaForeman);
+            tv_Partman.setText("Partman : " + namaPartmant);
+            tv_nomorpolisi.setText("NomorPolisi : " +nomorPolisi);
+            tv_typekendaraan.setText("Type Kendaraan : " +typeKendaraan);
             tv_tanggal.setText("Waktu : " + tanggal);
             tv_userId.setText("admin : " + userEmail);
             tv_total.setText("Total : " + total_Estimasi);
@@ -364,6 +521,7 @@ public class DataEstimasiFragment extends Fragment{
                     intent.putExtra("namaSA", testsa);
                     intent.putExtra("nama_teknisi", namaTeknisi);
                     intent.putExtra("nama_foreman", namaForeman);
+                    intent.putExtra("nama_partman", namaPartmant);
                     intent.putExtra("nomor_polisi", nomorPolisi);
                     intent.putExtra("type_kendaraan", typeKendaraan);
                     intent.putExtra("admin", userEmail);
@@ -386,6 +544,7 @@ public class DataEstimasiFragment extends Fragment{
         TextView tv_namaSA;
         TextView tv_total_hargaEstimasi;
         TextView tv_lihatDetail;
+        CardView cardView;
 
         public EstimasiViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -395,6 +554,7 @@ public class DataEstimasiFragment extends Fragment{
             tv_tanggalEstimasi = itemView.findViewById(R.id.tanggal_estimasi);
             tv_total_hargaEstimasi = itemView.findViewById(R.id.tv_totalEstimasi);
             tv_lihatDetail = itemView.findViewById(R.id.tv_lihatdetail);
+            cardView = itemView.findViewById(R.id.card_view);
 
 
         }

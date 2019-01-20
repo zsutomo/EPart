@@ -4,7 +4,7 @@ class ModelDataCart {
     String HargaPart;
     String NamaPart;
     String NomorPart;
-    int id;
+    String id;
     int jmlahItem;
     String namaForeMan;
     String namaSa;
@@ -15,8 +15,9 @@ class ModelDataCart {
     double totalHargaItem;
     String typeKendaraan;
     String userEmail;
+    String st_Stok;
 
-    public ModelDataCart(int id, String tanggal, String nomorPart, String namaPart, String hargaPart, int jmlahItem, double totalHargaItem, String totalHargaEstimasi, String namaSa, String namaTeknisi, String namaForeMan, String nomorPolisi, String typeKendaraan, String userEmail) {
+    public ModelDataCart(String id, String tanggal, String nomorPart, String namaPart, String hargaPart, int jmlahItem, double totalHargaItem, String totalHargaEstimasi, String namaSa, String namaTeknisi, String namaForeMan, String nomorPolisi, String typeKendaraan, String userEmail, String st_Stok) {
         this.id = id;
         this.tanggal = tanggal;
         this.NomorPart = nomorPart;
@@ -31,17 +32,19 @@ class ModelDataCart {
         this.nomorPolisi = nomorPolisi;
         this.typeKendaraan = typeKendaraan;
         this.userEmail = userEmail;
+        this.st_Stok = st_Stok;
     }
 
     public ModelDataCart() {
 
     }
 
-    public int getId() {
+    public String getId()
+    {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -147,5 +150,13 @@ class ModelDataCart {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public String getSt_Stok() {
+        return st_Stok;
+    }
+
+    public void setSt_Stok(String st_Stok) {
+        this.st_Stok = st_Stok;
     }
 }

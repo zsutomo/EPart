@@ -14,11 +14,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FragmentTransaction fragmenTransaction;
+    private TextView tv_userId;
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +47,21 @@ public class Home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        tv_userId = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_id);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        tv_userId.setText(firebaseUser.getEmail());
+
+
     }
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.END);
+            drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            finishAffinity();
         }
     }
 
@@ -114,10 +127,21 @@ public class Home extends AppCompatActivity
                 getSupportActionBar().setTitle("Data Estimasi");
                 item.setChecked(true);
                 break;
+
+            case R.id.nav_logout:
+                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
+                logout();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(Home.this, LoginActivity.class);
+        startActivity(intent);
     }
 }

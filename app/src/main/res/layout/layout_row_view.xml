@@ -41,5 +41,12 @@
             android:textAppearance="?android:textAppearanceSmall"
             tools:text="Jumlah Item" />
 
+        <TextView
+            android:id="@+id/textViewSt_stok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceSmall"
+            tools:text="Status Stok" />
+
     </LinearLayout>
 </RelativeLayout>

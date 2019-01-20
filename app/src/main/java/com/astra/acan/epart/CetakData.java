@@ -53,6 +53,8 @@ public class CetakData extends AppCompatActivity implements Runnable {
     private Calendar calander;
     private SimpleDateFormat simpledateformat;
     private String date;
+    private String nama_partman;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class CetakData extends AppCompatActivity implements Runnable {
         nama_sa = getIntent().getStringExtra("namaSA");
         nama_teknisi = getIntent().getStringExtra("nama_teknisi");
         nama_foreman = getIntent().getStringExtra("nama_foreman");
+        nama_partman = getIntent().getStringExtra("nama_partman");
         nomor_polisi = getIntent().getStringExtra("nomor_polisi");
         type_kendaraan = getIntent().getStringExtra("type_kendaraan");
         admin = getIntent().getStringExtra("admin");
@@ -105,7 +108,6 @@ public class CetakData extends AppCompatActivity implements Runnable {
         getDateTime();
 
         Thread t = new Thread() {
-            private String total_hargaItem;
 
             public void run() {
                 try {
@@ -114,65 +116,68 @@ public class CetakData extends AppCompatActivity implements Runnable {
                             .getOutputStream();
                     String BILL = "";
 
-                    BILL = "STRUK ESTIMASI SERVICE MOBIL\n"
-                            + "        AUTO 2000\n " +
-                            "       Palembang\n"
-                            + "      " + tanggal+  "\n";
+                    BILL = "    STRUK ESTIMASI PART MOBIL\n"
+                            + "     AUTO 2000 TAA \n "
+                            + "   " + tanggal+  "\n";
                     BILL = BILL + "--------------------------------\n";
 
+                    BILL = BILL + nama_sa + "      " + nama_foreman+ "\n";
+                    BILL = BILL + "Partman : " + nama_partman + "   " + nama_teknisi+ "\n";
+                    BILL = BILL + type_kendaraan +"\n";
+                    BILL = BILL + nomor_polisi+ "\n";
 
-                    BILL = BILL + String.format("%1$-6s %2$3s %3$8s %4$8s", "Item", "Qty", "Hrg", "Ttl");
-                    BILL = BILL + "\n";
-                    BILL = BILL + "\n";
+                    BILL = BILL + "--------------------------------\n";
+                    BILL = BILL + String.format("%1$-6s %2$15s %3$9s", "Item", "Harga", "St");
+                    BILL = BILL + "\n--------------------------------\n";
 
                     for (int i = 0; i<itemArrayList.size(); i++) {
                         String nomorPart = itemArrayList.get(i).getNomorPart();
-                        String namaPart = itemArrayList.get(i).getNamaPart();
-                        String hargaPart = itemArrayList.get(i).getHargaPart();
+                        String namaPart = itemArrayList.get(i).getNamaPart().substring(0,6);
+                        String hargaPart = itemArrayList.get(i).getHargaPart().trim();
                         String JumlahItem = itemArrayList.get(i).getJmlahItem();
+                        String st_stok = itemArrayList.get(i).getStatusStok();
                         String hargaItem = itemArrayList.get(i).getTotalHargaItem();
 
-                        BILL = BILL + String.format("%1$-6s %2$2s %3$8s %4$8s", namaPart, JumlahItem, hargaPart, hargaItem + "\n");
+                        System.out.println("stok : " + nomorPart);
+
+                        BILL = BILL + String.format("%1$-12s %2$17s %3$8s",nomorPart +"\n"+namaPart, hargaPart, st_stok + "\n");
                     }
 
-                    BILL = BILL + "\n--------------------------------";
-
-                    BILL = BILL + "Total : "+total_estimasi + "\n";
-
                     BILL = BILL + "--------------------------------";
 
-                    BILL = BILL + "\n";
-                    BILL = BILL + nama_sa + "\n";
-                    BILL = BILL + nama_foreman + "\n";
-                    BILL = BILL + nama_teknisi + "\n";
-                    BILL = BILL + nomor_polisi + "\n";
-                    BILL = BILL + type_kendaraan + "\n";
-                    BILL = BILL + admin + "\n";
+                    BILL = BILL + "*NB :"+"\n";
+                    BILL = BILL + "  St = Status Stok"+"\n";
+                    BILL = BILL + "  G = Gudang"+"\n";
+                    BILL = BILL + "  D = Depo"+"\n";
+                    BILL = BILL + "  T = Tam"+"\n";
 
                     BILL = BILL + "--------------------------------";
+                    BILL = BILL + "admin : " + admin + "\n";
+                    BILL = BILL + "--------------------------------";
 
+                    BILL = BILL + "Stok Status Part\n";
                     BILL = BILL + "Tanggal : " + date + "\n";
 
                     BILL = BILL + "TERIMAKASIH ATAS KUNJUNGAN ANDA \n";
-                    BILL = BILL + "-------AUTO 2000 Palembang------\n";
+                    BILL = BILL + "-------AUTO 2000 TAA------\n";
                     BILL = BILL + "\n";
                     os.write(BILL.getBytes());
                     //This is printer specific code you can comment ==== > Start
 
                     // Setting height
-                    int gs = 29;
+                    int gs = 10;
                     os.write(intToByteArray(gs));
-                    int h = 104;
+                    int h = 80;
                     os.write(intToByteArray(h));
-                    int n = 162;
+                    int n = 80;
                     os.write(intToByteArray(n));
 
                     // Setting Width
-                    int gs_width = 29;
+                    int gs_width = 10;
                     os.write(intToByteArray(gs_width));
-                    int w = 119;
+                    int w = 80;
                     os.write(intToByteArray(w));
-                    int n_width = 2;
+                    int n_width = 1;
                     os.write(intToByteArray(n_width));
 
 
@@ -210,7 +215,6 @@ public class CetakData extends AppCompatActivity implements Runnable {
 
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
         try {
             if (mBluetoothSocket != null)

@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Total :"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -72,7 +72,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_totalEstimasi"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:textSize="15sp"
             android:text="Teknisi"/>
 
@@ -81,16 +81,23 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/et_nama_teknisi"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:textSize="15sp"
             android:text="Foreman"/>
+
+        <TextView
+            android:id="@+id/tv_nama_partman"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="15sp"
+            android:text="Partman"/>
 
         <TextView
             android:id="@+id/tv_nomor_polisi"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/et_nama_foreman"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:textSize="15sp"
             android:text="Nomor Polisi"/>
 
@@ -99,16 +106,16 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/et_nomor_polisi"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:textSize="15sp"
-            android:text="Nomor Polisi"/>
+            android:text="Type Kendaraan"/>
 
         <TextView
             android:id="@+id/tv_tanggal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/et_nomor_polisi"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:textSize="15sp"
             android:text="Tanggal"/>
 

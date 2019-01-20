@@ -5,8 +5,10 @@ public class ModelDataPart {
     String namaPart;
     String hargaPart;
     int jmlahItem;
+    String stStok;
 
-    public ModelDataPart(String nomorPart, String namaPart, String hargaPart, int jmlahItem) {
+
+    public ModelDataPart(String nomorPart, String namaPart, String hargaPart, int jmlahItem, String stStok) {
         this.nomorPart = nomorPart;
         this.namaPart = namaPart;
         this.hargaPart = hargaPart;
@@ -47,5 +49,13 @@ public class ModelDataPart {
 
     public void setJmlahItem(int jmlahItem) {
         this.jmlahItem = jmlahItem;
+    }
+
+    public String getStStok() {
+        return stStok;
+    }
+
+    public void setStStok(String stStok) {
+        this.stStok = stStok;
     }
 }

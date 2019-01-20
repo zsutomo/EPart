@@ -9,7 +9,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -27,7 +27,7 @@
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
         <activity android:name=".UploadFileActivity" />
-        <activity android:name=".TestLoadData" />
+        <activity android:name=".CetakData" />
         <activity android:name=".CariDataPart" />
         <activity android:name=".DetailEstimasi" />
         <activity android:name=".DataEstimasi" />
