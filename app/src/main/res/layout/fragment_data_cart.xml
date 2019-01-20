@@ -37,54 +37,6 @@
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                     android:textStyle="bold"/>
 
-                <TextView
-                    android:textStyle="bold"
-                    android:layout_marginTop="5dp"
-                    android:text="Lihat Detail"
-                    android:id="@+id/tv_lihatdetail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:visibility="gone"
-                android:orientation="vertical"
-                android:id="@+id/rl_input_data"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dip"
-                android:padding="10.0dip"
-                android:background="@drawable/gray_categories_rect">
-
-                <TextView
-                    android:text="SA : "
-                    android:id="@+id/nama_sa"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:text="Teknisi : "
-                    android:id="@+id/nama_teknisi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:text="Foreman : "
-                    android:id="@+id/nama_foreman"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:text="Nomor Polisi : "
-                    android:id="@+id/nomor_polisi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:text="Type Kendaraan : "
-                    android:id="@+id/type_kendaraan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
             </LinearLayout>
 
         </LinearLayout>

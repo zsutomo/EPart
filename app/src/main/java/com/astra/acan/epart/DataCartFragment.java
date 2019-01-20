@@ -8,15 +8,24 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -56,9 +66,6 @@ public class DataCartFragment extends Fragment {
     private AlertDialog.Builder dialogInput;
     private LayoutInflater inflater;
     private View view;
-    private EditText et_nama_sa;
-    private EditText et_nama_teknisi;
-    private EditText et_nama_foreman;
     private EditText et_nomor_polisi;
     private EditText et_type_kendaraan;
     private TextView tv_simpan;
@@ -69,12 +76,21 @@ public class DataCartFragment extends Fragment {
     private TextView tv_nama_foreman;
     private TextView tv_nomor_polisi;
     private TextView tv_type_kendaraan;
-    private String nama_sa, nama_teknisi, nama_foreman, nomor_polisi, type_kendaraan;
     private Calendar calander;
     private SimpleDateFormat simpledateformat;
     private String date;
     private String total_hargaEstimasi;
     private String jmlahItemPart;
+    private String isiSpiner;
+    private TextView tv_nama_partman;
+    private String iddataCart;
+    private FragmentTransaction fragmenTransaction;
+    ArrayAdapter<String> SpinnerAdapter;
+    Spinner sp_nama_sa;
+    Spinner sp_nama_teknisi;
+    Spinner sp_nama_foreman;
+    Spinner sp_nama_partman;
+    String isi_partman, isi_foreman, isi_teknisi, isi_sa, nomor_polisi, type_kendaraan;
 
     public DataCartFragment() {
         // Required empty public constructor
@@ -89,14 +105,7 @@ public class DataCartFragment extends Fragment {
 
         mRecyclerView = view.findViewById(R.id.recycler_datacart);
         tv_granTotalHarga = view.findViewById(R.id.tv_totalEstimasi);
-        tv_lihatdteail = view.findViewById(R.id.tv_lihatdetail);
         tv_simpan = view.findViewById(R.id.tv_simpanData);
-        view_linear = view.findViewById(R.id.rl_input_data);
-        tv_nama_sa = view.findViewById(R.id.nama_sa);
-        tv_nama_teknisi = view.findViewById(R.id.nama_teknisi);
-        tv_nama_foreman = view.findViewById(R.id.nama_foreman);
-        tv_nomor_polisi = view.findViewById(R.id.nomor_polisi);
-        tv_type_kendaraan = view.findViewById(R.id.type_kendaraan);
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -104,6 +113,7 @@ public class DataCartFragment extends Fragment {
         firebaseUser = firebaseAuth.getCurrentUser();
         userId = firebaseUser.getUid();
         userEmail = firebaseUser.getEmail();
+
 
         listCart();
 
@@ -115,13 +125,6 @@ public class DataCartFragment extends Fragment {
             mRecyclerView.setAdapter(new DataCartAdapter(arrayList));
         }
         mRecyclerView.setLayoutManager(myLinearManager);
-
-        tv_lihatdteail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                view_linear.setVisibility(View.VISIBLE);
-            }
-        });
 
         tv_simpan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,94 +141,164 @@ public class DataCartFragment extends Fragment {
 
     private void simpanData() {
 
-        estimasiArrayList = new ArrayList<>();
+//        estimasiArrayList = new ArrayList<>();
         String total_hargaEstimasi = tv_granTotalHarga.getText().toString();
-        String nama_sa = tv_nama_sa.getText().toString();
-        String nama_teknisi = tv_nama_teknisi.getText().toString();
-        String nama_foreman = tv_nama_foreman.getText().toString();
-        String nomor_polisi = tv_nomor_polisi.getText().toString();
-        String type_kendaraan = tv_type_kendaraan.getText().toString();
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         String key = databaseReference.push().getKey();
 
         for (int i = 0; i < arrayList.size(); i++) {
+            iddataCart = arrayList.get(i).getId();
             nomorPart_cart = arrayList.get(i).getNomorPart();
             namaPart_cart = arrayList.get(i).getNamaPart();
             hargaPart_cart = arrayList.get(i).getHargaPart();
+            isiSpiner = arrayList.get(i).getSt_Stok();
             jmlahItemPart = String.valueOf(arrayList.get(i).getJmlahItem());
             totalHargaItem = Double.parseDouble(String.valueOf(arrayList.get(i).getTotalHargaItem()));
 
-            ModelDataEstimasi dataEstimasi = new ModelDataEstimasi();
-            dataEstimasi.setNomorPart(nomorPart_cart);
-            dataEstimasi.setNamaPart(namaPart_cart);
-            dataEstimasi.setHargaPart(hargaPart_cart);
-            dataEstimasi.setJmlahItem(Integer.parseInt(jmlahItemPart));
-            dataEstimasi.setTotalHargaItem(totalHargaItem);
+//            ModelDataEstimasi dataEstimasi = new ModelDataEstimasi();
+//            dataEstimasi.setNomorPart(nomorPart_cart);
+//            dataEstimasi.setNamaPart(namaPart_cart);
+//            dataEstimasi.setHargaPart(hargaPart_cart);
+//            dataEstimasi.setJmlahItem(Integer.parseInt(jmlahItemPart));
+//            dataEstimasi.setTotalHargaItem(totalHargaItem);
+//            dataEstimasi.setSt_Stok(isiSpiner);
 
-//            if (arrayList.get(i).getJmlahItem() > 0) {
-
-                estimasiArrayList.add(dataEstimasi);
-
+            if (arrayList.get(i).getJmlahItem()==0){
                 databaseReference = FirebaseDatabase.getInstance().getReference();
+                firebaseAuth = FirebaseAuth.getInstance();
+                firebaseUser = firebaseAuth.getCurrentUser();
+                userId = firebaseUser.getUid();
+                databaseReference.child(userId).child("DataCart").child(iddataCart).removeValue();
+                System.out.println("item yang kosong : " + nomorPart_cart);
+
+            } else {
+
+//                estimasiArrayList.add(dataEstimasi);
+                databaseReference = FirebaseDatabase.getInstance().getReference();
+                firebaseAuth = FirebaseAuth.getInstance();
+                firebaseUser = firebaseAuth.getCurrentUser();
+                userId = firebaseUser.getUid();
                 String keyestimasi = databaseReference.child(userId).child("DataEstimasi").child(key).push().getKey();
-                databaseReference.child(userId).child("DataEstimasi").child(key).child(keyestimasi).child("total_HargaEstimasi").setValue(total_hargaEstimasi);
-                databaseReference.child(userId).child("DataEstimasi").child(key).child(keyestimasi).child("namaSA").setValue(nama_sa);
-                databaseReference.child(userId).child("DataEstimasi").child(key).child(keyestimasi).child("namaTeknisi").setValue(nama_teknisi);
-                databaseReference.child(userId).child("DataEstimasi").child(key).child(keyestimasi).child("namaForeman").setValue(nama_foreman);
-                databaseReference.child(userId).child("DataEstimasi").child(key).child(keyestimasi).child("nomorPolisi").setValue(nomor_polisi);
-                databaseReference.child(userId).child("DataEstimasi").child(key).child(keyestimasi).child("typeKendaraan").setValue(type_kendaraan);
-                databaseReference.child(userId).child("DataEstimasi").child(key).child(keyestimasi).child("userId").setValue(userEmail);
-                databaseReference.child(userId).child("DataEstimasi").child(key).child(keyestimasi).child("tanggal").setValue(date);
-                databaseReference.child(userId).child("DataEstimasi").child(key).child(keyestimasi).child("nomorPart").setValue(nomorPart_cart);
-                databaseReference.child(userId).child("DataEstimasi").child(key).child(keyestimasi).child("namaPart").setValue(namaPart_cart);
-                databaseReference.child(userId).child("DataEstimasi").child(key).child(keyestimasi).child("hargaPart").setValue(hargaPart_cart);
-                databaseReference.child(userId).child("DataEstimasi").child(key).child(keyestimasi).child("jumlahItem").setValue(jmlahItemPart);
-                databaseReference.child(userId).child("DataEstimasi").child(key).child(keyestimasi).child("jumlahHargaItem").setValue(totalHargaItem);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("total_HargaEstimasi").setValue(total_hargaEstimasi);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("namaSA").setValue(isi_sa);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("namaTeknisi").setValue(isi_teknisi);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("namaForeman").setValue(isi_foreman);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("namaPartman").setValue(isi_partman);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("nomorPolisi").setValue(nomor_polisi);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("typeKendaraan").setValue(type_kendaraan);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("userId").setValue(userEmail);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("tanggal").setValue(date);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("nomorPart").setValue(nomorPart_cart);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("namaPart").setValue(namaPart_cart);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("hargaPart").setValue(hargaPart_cart);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("jumlahItem").setValue(jmlahItemPart);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("jumlahHargaItem").setValue(totalHargaItem);
+                databaseReference.child(userId).child("DataEstimasi").child(nomor_polisi).child(keyestimasi).child("Status_Stok").setValue(isiSpiner);
                 System.out.println("data jumlah item : " + arrayList.size());
 
-//        } else if (arrayList.get(i).getJmlahItem() <=0){
-//                arrayList.remove(i);
-//                System.out.println("data jumlah item : " + arrayList.size());
-//
-//            }
+            }
 
         }
-
         Intent intent = new Intent(getActivity(), Home.class);
         startActivity(intent);
     }
 
     private void addFormInput() {
 
+        final String[] namaSA = {"Aan", "Adin", "Andreas", "Denny", "Erwin", "Hadiid", "Heru", "Pradana", "Robby", "Taufik", "Septa"};
+        final String[] namaTeknisi = {"Agus", "Aji", "Amin", "Ardy", "Crismon", "Dedi", "Denny", "Dian", "Dwi", "Fariz", "Hega", "Hendi", "Hengky", "Herry", "Husin", "Irawan", "Jarni", "Laksamana", "Lingga", "Mulyono", "Oky", "Rijal", "Robby", "Setiawab", "Yusuf"};
+        final String[] namaForeman = {"Abdul", "Acep", "Efrizal", "Eko", "Faris", "Jummally", "Ridwan", "Wandiy"};
+        final String[] namaPartman = {"Acan", "Zaenal", "Annis", "Gerry"};
 
         dialogInput = new AlertDialog.Builder(getActivity());
         inflater = getLayoutInflater();
         view = inflater.inflate(R.layout.form_input_data_estimasi, null);
         dialogInput.setView(view);
         dialogInput.setCancelable(false);
+        sp_nama_sa = (Spinner) view.findViewById(R.id.sp_nama_sa);
+        sp_nama_teknisi = (Spinner) view.findViewById(R.id.sp_nama_teknisi);
+        sp_nama_foreman = (Spinner) view.findViewById(R.id.sp_nama_foreman);
+        sp_nama_partman = (Spinner) view.findViewById(R.id.sp_nama_partman);
+        et_nomor_polisi = (EditText) view.findViewById(R.id.et_nomor_polisi);
+        et_type_kendaraan = (EditText) view.findViewById(R.id.et_type_kendaraan);
+
+        SpinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, namaPartman);
+        SpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_nama_partman.setAdapter(SpinnerAdapter);
+
+        SpinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, namaSA);
+        SpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_nama_sa.setAdapter(SpinnerAdapter);
+
+        SpinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, namaTeknisi);
+        SpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_nama_teknisi.setAdapter(SpinnerAdapter);
+
+        SpinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, namaForeman);
+        SpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_nama_foreman.setAdapter(SpinnerAdapter);
+
+        sp_nama_partman.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                isi_partman = parent.getItemAtPosition(position).toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        sp_nama_sa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                isi_sa = parent.getItemAtPosition(position).toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        sp_nama_teknisi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                isi_teknisi = parent.getItemAtPosition(position).toString();
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        sp_nama_foreman.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                isi_foreman = parent.getItemAtPosition(position).toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         dialogInput.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                et_nama_sa = (EditText) view.findViewById(R.id.et_nama_sa);
-                et_nama_teknisi = (EditText) view.findViewById(R.id.et_nama_teknisi);
-                et_nama_foreman = (EditText) view.findViewById(R.id.et_nama_foreman);
-                et_nomor_polisi = (EditText) view.findViewById(R.id.et_nomor_polisi);
-                et_type_kendaraan = (EditText) view.findViewById(R.id.et_type_kendaraan);
 
-                nama_sa = et_nama_sa.getText().toString();
-                nama_teknisi = et_nama_teknisi.getText().toString();
-                nama_foreman = et_nama_foreman.getText().toString();
                 nomor_polisi = et_nomor_polisi.getText().toString();
                 type_kendaraan = et_type_kendaraan.getText().toString();
-
-                tv_nama_sa.setText("SA : " + nama_sa);
-                tv_nama_teknisi.setText("Teknisi : " + nama_teknisi);
-                tv_nama_foreman.setText("Foreman : " + nama_foreman);
-                tv_nomor_polisi.setText("Nomor Polisi : " + nomor_polisi);
-                tv_type_kendaraan.setText("Type Kendaraan : " + type_kendaraan);
-
-                Toast.makeText(getActivity(), "Data : " + nama_sa, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Data : " + isi_sa, Toast.LENGTH_SHORT).show();
                 simpanData();
             }
         });
@@ -267,7 +340,9 @@ public class DataCartFragment extends Fragment {
                                 String namaPart_cart = String.valueOf(snapshotCartItem.child("namaPart").getValue());
                                 String hargaPart_cart = String.valueOf(snapshotCartItem.child("hargaPart").getValue());
 
+
                                 ModelDataCart dataCart = new ModelDataCart();
+                                dataCart.setId(id);
                                 dataCart.setNomorPart(nomorPart_cart);
                                 dataCart.setNamaPart(namaPart_cart);
                                 dataCart.setHargaPart(hargaPart_cart);
@@ -294,16 +369,23 @@ public class DataCartFragment extends Fragment {
         });
 
     }
-
     private class DataCartAdapter extends RecyclerView.Adapter<DataCartViewHolder> {
 
+
+        private ArrayAdapter<String> dataAdapter;
         private int isiJmlahItem;
         private int itemCount = 1;
-
+        String tempSpiner;
         ArrayList<ModelDataCart> listcart;
+        List<String> stStok = new ArrayList<String>();
 
         public DataCartAdapter(ArrayList<ModelDataCart> arrayList) {
             listcart = arrayList;
+
+            stStok.add("T");
+            stStok.add("G");
+            stStok.add("D");
+
         }
 
         @NonNull
@@ -318,6 +400,9 @@ public class DataCartFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull final DataCartViewHolder cartViewHolder, final int position) {
+            dataAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, stStok);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
             cartViewHolder.tv_nomorPart.setText(listcart.get(position).getNomorPart());
             cartViewHolder.tv_namaPart.setText(listcart.get(position).getNamaPart());
             cartViewHolder.tv_hargaPart.setText(listcart.get(position).getHargaPart());
@@ -352,6 +437,69 @@ public class DataCartFragment extends Fragment {
                 }
             });
 
+            cartViewHolder.spinnerStstok.setAdapter(dataAdapter);
+            cartViewHolder.spinnerStstok.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+                    tempSpiner = parent.getItemAtPosition(pos).toString();
+                    listcart.get(position).setSt_Stok(tempSpiner);
+                    isiSpiner = listcart.get(position).getSt_Stok();
+                    // Showing selected spinner item
+                    Toast.makeText(parent.getContext(), "Selected: " + isiSpiner, Toast.LENGTH_LONG).show();
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            cartViewHolder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    Toast.makeText(getActivity(), "Test On LongClick" + listcart.get(position).getId(), Toast.LENGTH_SHORT).show();
+                    konfirmasiHapus(listcart.get(position).getId(), listcart.get(position).getNomorPart());
+                    return false;
+                }
+
+                private void konfirmasiHapus(final String id, String nomorPart) {
+
+                    AlertDialog.Builder alBuilder = new AlertDialog.Builder(getActivity());
+                    alBuilder.setTitle("Konfirmasi Hapus");
+                    alBuilder.setMessage("Apakah Anda Yakin Akan menghapus data  " + nomorPart + "?");
+                    alBuilder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            databaseReference = FirebaseDatabase.getInstance().getReference();
+                            firebaseAuth = FirebaseAuth.getInstance();
+                            firebaseUser = firebaseAuth.getCurrentUser();
+                            userId = firebaseUser.getUid();
+                            databaseReference.child(userId).child("DataCart").child(id).removeValue();
+
+
+                            listcart.clear();
+                            listcart.remove(position);
+                            DataCartAdapter.this.notifyItemRemoved(position);
+                            DataCartAdapter.this.notifyItemRangeChanged(position, listcart.size());
+                            DataCartAdapter.this.notifyDataSetChanged();
+                            mRecyclerView.removeAllViews();
+
+                        }
+                    });
+                    alBuilder.setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            DataCartAdapter.this.notifyDataSetChanged();
+                        }
+                    }).show();
+
+                }
+            });
+
         }
 
         @Override
@@ -365,24 +513,25 @@ public class DataCartFragment extends Fragment {
     private class DataCartViewHolder extends RecyclerView.ViewHolder {
         private final Button plus;
         private final Button minus;
+        private final CardView cardView;
         TextView tv_nomorPart;
         TextView tv_namaPart;
         TextView tv_hargaPart;
-        TextView tv_hapus;
         TextView tv_total_harga_item;
         TextView tv_jumlahItem;
+        Spinner spinnerStstok;
 
         public DataCartViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            cardView = itemView.findViewById(R.id.card_view);
             tv_nomorPart = itemView.findViewById(R.id.nomor_part_cart);
             tv_namaPart = itemView.findViewById(R.id.nama_part_cart);
             tv_hargaPart = itemView.findViewById(R.id.harga_part_cart);
-//            tv_hapus = itemView.findViewById(R.id.hapus_datacart);
             tv_total_harga_item = itemView.findViewById(R.id.tv_jmlah_harga_part_cart);
             tv_jumlahItem = itemView.findViewById(R.id.tv_jmlah_item_part_cart);
             plus = itemView.findViewById(R.id.btn_nambah);
             minus = itemView.findViewById(R.id.btn_ngurangin);
+            spinnerStstok = itemView.findViewById(R.id.spin_ststok);
         }
     }
 

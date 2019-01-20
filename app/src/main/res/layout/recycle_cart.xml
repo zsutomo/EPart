@@ -5,9 +5,9 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="5dp"
     android:background="@drawable/rect_gradient"
-    tools:ignore="NamespaceTypo"
-    android:layout_margin="5dp">
+    tools:ignore="NamespaceTypo">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,14 +34,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#000"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/harga_part_cart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#000"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -49,19 +49,19 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="Jumlah Item"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
 
                 <Button
-                    android:layout_marginLeft="100dp"
                     android:id="@+id/btn_ngurangin"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="100dp"
                     android:background="@drawable/ic_minus_circle" />
 
                 <RelativeLayout
@@ -75,22 +75,45 @@
                         android:id="@+id/tv_jmlah_item_part_cart"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
                         android:text="1"
                         android:textSize="18dp"
-                        android:textStyle="bold"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"/>
+                        android:textStyle="bold" />
                 </RelativeLayout>
 
                 <Button
-                    android:padding="5dp"
                     android:id="@+id/btn_nambah"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
-                    android:background="@drawable/ic_add_circle" />
+                    android:background="@drawable/ic_add_circle"
+                    android:padding="5dp" />
 
             </LinearLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status Stok : "
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/bg_edittext"
+                android:padding="2dp">
+
+                <Spinner
+                    android:id="@+id/spin_ststok"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </Spinner>
+
+            </RelativeLayout>
 
         </LinearLayout>
 
@@ -101,24 +124,14 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_marginTop="5dp"
             android:orientation="horizontal"
             android:padding="10dp">
 
-            <!--<TextView-->
-                <!--android:id="@+id/hapus_datacart"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Hapus"-->
-                <!--android:textColor="#bb7ba8f7"-->
-                <!--android:textSize="16dp"-->
-                <!--android:textStyle="bold"-->
-                <!--android:padding="10dp"/>-->
-
-
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -130,6 +143,8 @@
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                     android:textStyle="bold" />
             </RelativeLayout>
+
+
 
 
         </LinearLayout>

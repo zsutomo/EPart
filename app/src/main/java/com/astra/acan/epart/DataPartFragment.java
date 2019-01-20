@@ -37,6 +37,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -77,6 +78,7 @@ public class DataPartFragment extends Fragment {
     public EditText et_inputNamaPart;
     public EditText et_inputHargaPart;
     private FragmentTransaction fragmenTransaction;
+    private DataPartAdapter datapartAdapter;
 
     public DataPartFragment() {
         // Required empty public constructor
@@ -143,7 +145,7 @@ public class DataPartFragment extends Fragment {
 
     }
 
-    private void simpanDataCartFirebase(ArrayList<ModelDataPart> cartList) {
+    private void simpanDataCartFirebase(final ArrayList<ModelDataPart> cartList) {
 
         for (int i=0;i<cartList.size(); i++){
             String nomorPart = cartList.get(i).getNomorPart();
@@ -151,9 +153,13 @@ public class DataPartFragment extends Fragment {
             String hargaPart = cartList.get(i).getHargaPart();
 
             databaseReference = FirebaseDatabase.getInstance().getReference();
+            firebaseAuth = FirebaseAuth.getInstance();
+            firebaseUser = firebaseAuth.getCurrentUser();
+            userId = firebaseUser.getUid();
             String key = databaseReference.push().getKey();
 
             if (databaseReference.child(userId).child("DataCart").getKey().isEmpty()) {
+
                 databaseReference.child(userId).child("DataCart").child(key).child("id_cart").setValue(key);
                 databaseReference.child(userId).child("DataCart").child(key).child("nomorPart").setValue(nomorPart);
                 databaseReference.child(userId).child("DataCart").child(key).child("namaPart").setValue(namaPart);
@@ -165,16 +171,16 @@ public class DataPartFragment extends Fragment {
                 databaseReference.child(userId).child("DataCart").child(key).child("hargaPart").setValue(hargaPart);
             }
         }
-
         progressDialog.dismiss();
         editTextCari.setText("");
-        mRecyclerView.clearFocus();
         AlertDialog.Builder alBuilder = new AlertDialog.Builder(getActivity());
         alBuilder.setTitle("Sukses");
         alBuilder.setMessage("Data Berhasil disimpan " + cartList.size());
         alBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                arrayList.clear();
+                cartList.clear();
                 dialog.dismiss();
             }
         }).show();
@@ -248,7 +254,7 @@ public class DataPartFragment extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
                 if (actionId == EditorInfo.IME_ACTION_SEARCH){
-                    if (editTextCari != null && !TextUtils.isEmpty(editTextCari.getText())) {
+                    if (editTextCari != null) {
                         inputcari = editTextCari.getText().toString();
                         CariData(inputcari);
                     }
@@ -261,7 +267,10 @@ public class DataPartFragment extends Fragment {
 
     private void CariData(final String inputcari) {
         arrayList = new ArrayList<>();
-
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        userId = firebaseUser.getUid();
 
         System.out.println("input : " + inputcari);
         progressDialog =  new ProgressDialog(getActivity());
@@ -270,54 +279,53 @@ public class DataPartFragment extends Fragment {
         progressDialog.show();
 
         databaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("RestrictedApi")
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
 //                    System.out.println("isi datapart : " + dataSnapshot1);
 
-                    if (dataSnapshot1.getKey().equals("FileUpload")){
-                        System.out.println("data snapshot1 : " + dataSnapshot1);
+                    if (snapshot.getKey().equals("DataInputManual")) {
+                        for (DataSnapshot snapshotInputManual : snapshot.getChildren()){
+                            System.out.println("data snapshot2 : " + snapshotInputManual);
 
-                        for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()){
+                            if (inputcari.equals(snapshotInputManual.child("NomorPart").getValue())) {
+
+                                id = snapshotInputManual.getKey();
+                                nomorPart = String.valueOf(snapshotInputManual.child("NomorPart").getValue());
+                                namaPart = String.valueOf(snapshotInputManual.child("NamaPart").getValue());
+                                hargaPart = String.valueOf(snapshotInputManual.child("HargaPart").getValue());
+
+
+                                ModelDataPart modelDataPart = new ModelDataPart();
+                                modelDataPart.setNomorPart(nomorPart);
+                                modelDataPart.setNamaPart(namaPart);
+                                modelDataPart.setHargaPart(hargaPart);
+                                arrayList.add(modelDataPart);
+
+                                System.out.println("hasil cari : " + nomorPart);
+                                System.out.println("size : " + arrayList.size());
+                                progressDialog.dismiss();
+                                tv_datakosong.setVisibility(View.GONE);
+                                fab_btn_add_datapart.setVisibility(View.GONE);
+
+                            } else if (arrayList.size()==0) {
+                                fab_btn_add_datapart.setVisibility(View.VISIBLE);
+                                tv_datakosong.setVisibility(View.VISIBLE);
+                                progressDialog.dismiss();
+                            }
+                        }
+
+                    } else if (snapshot.getKey().equals("FileUpload")){
+                        System.out.println("data snapshot1 : " + snapshot);
+                        for (DataSnapshot dataSnapshot2 : snapshot.getChildren()){
 //                            System.out.println("data snapshot2 : " + dataSnapshot2);
 
                             if (inputcari.toLowerCase().equals(dataSnapshot2.child("NomorPart").getValue())) {
                                 id = dataSnapshot2.getKey();
-                                nomorPart = dataSnapshot2.child("NomorPart").getValue().toString();
-                                namaPart = dataSnapshot2.child("NamaPart").getValue().toString();
-                                hargaPart = dataSnapshot2.child("HargaPart").getValue().toString();
-
-
-                                ModelDataPart modelDataPart = new ModelDataPart();
-                                modelDataPart.setNomorPart(nomorPart);
-                                modelDataPart.setNamaPart(namaPart);
-                                modelDataPart.setHargaPart(hargaPart);
-                                arrayList.add(modelDataPart);
-
-                                System.out.println("hasil cari : " + nomorPart);
-                                System.out.println("size : " + arrayList.size());
-                                progressDialog.dismiss();
-                                tv_datakosong.setVisibility(View.GONE);
-                                fab_btn_add_datapart.setVisibility(View.GONE);
-
-                            } else if (arrayList.size()==0) {
-                                fab_btn_add_datapart.setVisibility(View.VISIBLE);
-                                tv_datakosong.setVisibility(View.VISIBLE);
-                                progressDialog.dismiss();
-                            }
-                        }
-                    } else if (dataSnapshot1.getKey().equals("DataInputManual")) {
-                        for (DataSnapshot snapshotInputManual : dataSnapshot1.getChildren()){
-//                            System.out.println("data snapshot2 : " + dataSnapshot2);
-
-                            if (inputcari.toLowerCase().equals(snapshotInputManual.child("NomorPart").getValue())) {
-                                id = snapshotInputManual.getKey();
-                                nomorPart = snapshotInputManual.child("NomorPart").getValue().toString();
-                                namaPart = snapshotInputManual.child("NamaPart").getValue().toString();
-                                hargaPart = snapshotInputManual.child("HargaPart").getValue().toString();
-
+                                nomorPart = String.valueOf(dataSnapshot2.child("NomorPart").getValue());
+                                namaPart = String.valueOf(dataSnapshot2.child("NamaPart").getValue());
+                                hargaPart = String.valueOf(dataSnapshot2.child("HargaPart").getValue());
 
                                 ModelDataPart modelDataPart = new ModelDataPart();
                                 modelDataPart.setNomorPart(nomorPart);
@@ -331,13 +339,13 @@ public class DataPartFragment extends Fragment {
                                 tv_datakosong.setVisibility(View.GONE);
                                 fab_btn_add_datapart.setVisibility(View.GONE);
 
-                            } else if (arrayList.size()==0) {
+                            }
+                            else if (arrayList.size()==0) {
                                 fab_btn_add_datapart.setVisibility(View.VISIBLE);
                                 tv_datakosong.setVisibility(View.VISIBLE);
                                 progressDialog.dismiss();
                             }
                         }
-
                     } else {
                         fab_btn_add_datapart.setVisibility(View.VISIBLE);
                         tv_datakosong.setVisibility(View.VISIBLE);

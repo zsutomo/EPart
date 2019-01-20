@@ -15,8 +15,10 @@ class ModelDataEstimasi {
     double totalHargaItem;
     String typeKendaraan;
     String userEmail;
+    String nama_partman;
+    String st_Stok;
 
-    public ModelDataEstimasi(int id, String tanggal, String nomorPart, String namaPart, String hargaPart, int jmlahItem, double totalHargaItem, String totalHargaEstimasi, String namaSa, String namaTeknisi, String namaForeMan, String nomorPolisi, String typeKendaraan, String userEmail) {
+    public ModelDataEstimasi(int id, String tanggal, String nomorPart, String namaPart, String hargaPart, int jmlahItem, double totalHargaItem, String totalHargaEstimasi, String namaSa, String namaTeknisi, String namaForeMan, String nomorPolisi, String typeKendaraan, String userEmail, String nama_partman, String st_Stok) {
         this.id = id;
         this.tanggal = tanggal;
         this.NomorPart = nomorPart;
@@ -31,6 +33,8 @@ class ModelDataEstimasi {
         this.nomorPolisi = nomorPolisi;
         this.typeKendaraan = typeKendaraan;
         this.userEmail = userEmail;
+        this.nama_partman = nama_partman;
+        this.st_Stok = st_Stok;
     }
 
     public ModelDataEstimasi() {
@@ -147,5 +151,21 @@ class ModelDataEstimasi {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public String getNama_partman() {
+        return nama_partman;
+    }
+
+    public void setNama_partman(String nama_partman) {
+        this.nama_partman = nama_partman;
+    }
+
+    public String getSt_Stok() {
+        return st_Stok;
+    }
+
+    public void setSt_Stok(String st_Stok) {
+        this.st_Stok = st_Stok;
     }
 }

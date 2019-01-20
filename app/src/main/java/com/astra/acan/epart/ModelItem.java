@@ -1,6 +1,8 @@
 package com.astra.acan.epart;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 class ModelItem implements Serializable {
     String HargaPart;
@@ -17,8 +19,10 @@ class ModelItem implements Serializable {
     String totalHargaItem;
     String typeKendaraan;
     String userEmail;
+    String statusStok;
+    String namaPartman;
 
-    public ModelItem(String id, String tanggal, String nomorPart, String namaPart, String hargaPart, String jmlahItem, String totalHargaItem, String totalHargaEstimasi, String namaSa, String namaTeknisi, String namaForeMan, String nomorPolisi, String typeKendaraan, String userEmail) {
+    public ModelItem(String id, String tanggal, String nomorPart, String namaPart, String hargaPart, String jmlahItem, String totalHargaItem, String totalHargaEstimasi, String namaSa, String namaTeknisi, String namaForeMan, String nomorPolisi, String typeKendaraan, String userEmail, String statusStok, String namaPartman) {
         this.id = id;
         this.tanggal = tanggal;
         this.NomorPart = nomorPart;
@@ -33,6 +37,8 @@ class ModelItem implements Serializable {
         this.nomorPolisi = nomorPolisi;
         this.typeKendaraan = typeKendaraan;
         this.userEmail = userEmail;
+        this.statusStok = statusStok;
+        this.namaPartman = namaPartman;
     }
 
     public ModelItem() {
@@ -149,5 +155,21 @@ class ModelItem implements Serializable {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public String getStatusStok() {
+        return statusStok;
+    }
+
+    public void setStatusStok(String statusStok) {
+        this.statusStok = statusStok;
+    }
+
+    public String getNamaPartman() {
+        return namaPartman;
+    }
+
+    public void setNamaPartman(String namaPartman) {
+        this.namaPartman = namaPartman;
     }
 }

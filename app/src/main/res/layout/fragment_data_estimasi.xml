@@ -1,35 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#bb7ba8f7"
+    android:padding="5dp"
     tools:context=".DataEstimasiFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <android.support.v4.widget.NestedScrollView
-    android:layout_marginBottom="50dp"
-    android:padding="10dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-        <LinearLayout
-            android:orientation="vertical"
+    <LinearLayout
+        android:id="@+id/bg_et_cari"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:padding="10dp">
+
+        <EditText
+            android:id="@+id/et_cari_estimasi"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/rect_gradient"
+            android:hint="Cari Nomor Part"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:padding="5dp" />
+    </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_dataestimasi"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/bg_et_cari"
-                android:layout_marginTop="5dp"
-                android:padding="5dp" />
-        </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_dataestimasi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bg_et_cari"
+        android:layout_marginTop="5dp"
+        android:padding="10dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_add_black"
+        tools:ignore="VectorDrawableCompat" />
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab_add_data_cart"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:layout_marginBottom="30dp"-->
+        <!--app:srcCompat="@drawable/ic_add_shopping_cart_black"-->
+        <!--tools:ignore="VectorDrawableCompat" />-->
+
+    <TextView
+        android:id="@+id/tv_data_kosong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="DATA KOSONG"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
 
-
-
-
-    </android.support.v4.widget.NestedScrollView>
-
-</FrameLayout>
+</RelativeLayout>

@@ -52,11 +52,13 @@ public class ListAdapter extends BaseAdapter {
         TextView tv_hargaPartItem = (TextView) convertView.findViewById(R.id.textViewHargaPart);
         TextView tv_nomorPartItem = (TextView) convertView.findViewById(R.id.textViewNomorPart);
         TextView tv_jumlahPartItem = (TextView) convertView.findViewById(R.id.textViewJumlahItem);
+        TextView tv_st_Stok = (TextView) convertView.findViewById(R.id.textViewSt_stok);
 
         tv_nomorPartItem.setText("Nomor Part : " + modelItem.getNomorPart());
         tv_namaPartItem.setText("Nama Part : " + modelItem.getNamaPart());
         tv_hargaPartItem.setText("Harga Part : " + modelItem.getHargaPart());
         tv_jumlahPartItem.setText("Jumlah : " + modelItem.getJmlahItem());
+        tv_st_Stok.setText("Status Stok : " + modelItem.getStatusStok());
 
 
         return convertView;
